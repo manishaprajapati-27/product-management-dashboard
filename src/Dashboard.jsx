@@ -25,9 +25,21 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState("all");
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => setMessage(""), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
 
   const handleShowForm = () => {
     setShowForm(!showForm);
+  };
+
+  const closeForm = () => {
+    setShowForm(false);
   };
 
   //   Data Fetch
@@ -72,6 +84,8 @@ const Dashboard = () => {
             count: "",
           },
         });
+        // setMessage("Product added successfully!"); // 👈 add this
+        // closeForm();
       })
       .catch((error) => {
         setError(error.message);
@@ -86,12 +100,12 @@ const Dashboard = () => {
       .then((response) => {
         setProducts(
           products.map((product) =>
-            product.id === editProductId ? response.data : product
+            product.id === id ? response.data : product
           )
         );
         setEditProductId(null);
-        setShowForm(false);
-        // resetForm();
+        closeForm();
+        setMessage("Product updated successfully!");
       })
       .catch((error) => {
         setError(error.message);
@@ -105,6 +119,8 @@ const Dashboard = () => {
       .delete(`https://fakestoreapi.com/products/${id}`)
       .then(() => {
         setProducts(products.filter((product) => product.id !== id));
+        setMessage("Product deleted successfully!");
+        setTimeout(() => setMessage(""), 3000);
       })
       .catch((error) => {
         setError(error.message);
@@ -112,21 +128,11 @@ const Dashboard = () => {
       });
   };
 
-  //   const addNewProduct = (newProduct) => {
-  //     setProducts([newProduct, ...products]);
-  //   };
-
   const handleEdit = (product, index) => {
     setFormData(product);
-    setEditProductId(index);
+    setEditProductId(product.id);
     setShowForm(true);
   };
-
-  //   const filteredProducts = products.filter((product) => {
-  //     searchTerm === ""
-  //       ? true
-  //       : product.title?.toLowerCase().includes(searchTerm.toLowerCase());
-  //   });
 
   useEffect(() => {
     axios
@@ -269,12 +275,14 @@ const Dashboard = () => {
                 <div className="flex gap-3 mt-3">
                   <button
                     onClick={() => handleEdit(product)}
+                    title="Edit"
                     className="bg-blue-900 text-white h-8 w-8 flex justify-center items-center rounded-[5px] cursor-pointer hover:bg-blue-500 transition-all ease-in duration-300 "
                   >
                     <MdEdit />
                   </button>
                   <button
                     onClick={() => deleteProduct(product.id)}
+                    title="Delete"
                     className="bg-blue-900 text-white h-8 w-8 flex justify-center items-center rounded-[5px] cursor-pointer hover:bg-blue-500 transition-all ease-in duration-300 "
                   >
                     <MdDelete />
@@ -290,14 +298,21 @@ const Dashboard = () => {
       {showForm && (
         <AddProductForm
           addProduct={addProduct}
-          products={products}
-          setProducts={setProducts}
           formData={formData}
           setFormData={setFormData}
           editProduct={editProduct}
           editProductId={editProductId}
           handleShowForm={handleShowForm}
+          closeForm={closeForm}
+          message={message}
+          setMessage={setMessage}
         />
+      )}
+
+      {message && (
+        <div className="fixed text-center mb-4 text-green-600 font-medium w-[30%] px-2 py-4 bg-green-200 top-3 right-3 rounded-[7px]">
+          {message}
+        </div>
       )}
     </div>
   );

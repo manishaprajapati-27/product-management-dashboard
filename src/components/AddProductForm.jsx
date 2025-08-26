@@ -3,13 +3,14 @@ import { FaTimes } from "react-icons/fa";
 
 const AddProductForm = ({
   handleShowForm,
-  products,
-  setProducts,
   formData,
   setFormData,
   editProductId,
-  setEditProductId,
   addProduct,
+  closeForm,
+  message,
+  setMessage,
+  editProduct,
 }) => {
   const handleFormChange = (e) => {
     setFormData({
@@ -21,31 +22,24 @@ const AddProductForm = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // onAddProduct(formData);
-    // console.log("Form Submit:", formData);
-    const rate = parseFloat(formData.rating.rate);
-    if (rate < 0 || rate > 5) {
-      alert("Rating should be between 0 to 5");
-    }
 
     if (editProductId !== null) {
-      const updateProducts = [...products];
-      updateProducts[editProductId] = formData;
-      setProducts(updateProducts);
-      setEditProductId(null);
+      editProduct(editProductId); // ✅ call parent function
+      setMessage("Product updated successfully!");
+      closeForm();
     } else {
-      setProducts([...products, formData]);
+      addProduct(); // ✅ call parent add
+      setMessage("Product added successfully!");
+      closeForm();
     }
+
     setFormData({
       title: "",
       price: "",
       category: "",
       image: "",
       description: "",
-      rating: {
-        rate: "",
-        count: "",
-      },
+      rating: { rate: "", count: "" },
     });
   };
 
@@ -85,7 +79,7 @@ const AddProductForm = ({
                 required
               />
             </div>
-            <div className="mb-2">
+            {/* <div className="mb-2">
               <input
                 type="number"
                 step="0.1"
@@ -109,9 +103,9 @@ const AddProductForm = ({
                 className="px-5 py-2.5 w-full border-1 border-[#53525221] focus:border-blue-500 outline-0 rounded-[7px]"
                 required
               />
-            </div>
+            </div> */}
             <div className="mb-2">
-              <input
+              {/* <input
                 type="text"
                 name="category"
                 value={formData.category}
@@ -119,7 +113,20 @@ const AddProductForm = ({
                 placeholder="Category"
                 className="px-5 py-2.5 w-full border-1 border-[#53525221] focus:border-blue-500 outline-0 rounded-[7px]"
                 required
-              />
+              /> */}
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleFormChange}
+                className="px-5 py-2.5 w-full border-1 border-[#53525221] focus:border-blue-500 outline-0 rounded-[7px]"
+                required
+              >
+                <option value="">Select Category</option>
+                <option value="electronics">Electronics</option>
+                <option value="jewelery">Jewelery</option>
+                <option value="men's clothing">Men's Clothing</option>
+                <option value="women's clothing">Women's Clothing</option>
+              </select>
             </div>
             <div className="mb-2">
               <input
@@ -148,7 +155,7 @@ const AddProductForm = ({
           <div className="mb-2 text-center">
             <button
               type="submit"
-              onClick={addProduct}
+              //   onClick={addProduct}
               className="bg-blue-500 text-white px-5 py-2.5 rounded-[7px] whitespace-nowrap font-medium hover:bg-blue-900 transition-all duration-500 ease-in cursor-pointer"
             >
               {editProductId ? "Update Product" : "Add Product"}
