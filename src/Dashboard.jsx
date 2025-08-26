@@ -180,10 +180,10 @@ const Dashboard = () => {
           : "px-7 py-9 md:px-12 md:py-14 relative"
       }
     >
-      <h1 className="text-4xl font-bold text-blue-900">
+      <h1 className="text-2xl font-bold text-blue-900 sm:text-4xl">
         Product Management Dashboard
       </h1>
-      <div className="flex justify-between flex-nowrap py-6 gap-5">
+      <div className="flex justify-between flex-nowrap py-6 gap-5 flex-col sm:flex-row">
         <div className="w-full relative">
           <input
             type="search"
@@ -215,7 +215,7 @@ const Dashboard = () => {
           Add Product
         </button>
       </div>
-      <div className="grid lg:grid-cols-4 gap-4 md:grid-cols-3 sm:grid-cols-1">
+      <div className="grid lg:grid-cols-4 gap-4 md:grid-cols-2 sm:grid-cols-1">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <div
