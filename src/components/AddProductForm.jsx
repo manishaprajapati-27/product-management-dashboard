@@ -46,8 +46,8 @@ const AddProductForm = ({
   return (
     <div className="fixed w-full min-h-full bg-[#010c13f5] top-0 left-0 flex justify-center items-center">
       <div className="w-[70%] relative bg-white p-6 border-1 border-[#53525221] shadow-md rounded-[7px]">
-        <h3 className="text-3xl font-semibold text-blue-900 text-center mb-4">
-          Add New Product
+        <h3 className="text-3xl font-semibold text-blue-900 text-center mb-4">        
+           {editProductId ? "Edit Product" : "Add New Product"}
         </h3>
         <button
           onClick={handleShowForm}
